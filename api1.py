@@ -41,7 +41,7 @@ def load_data(nx, ny, base_date, base_time):
                     temp[i['category']] = i['obsrValue']
                 cursor = conn.cursor()
 
-                sql = f"INSERT INTO weather_data (x, y, Date, Time, PTY, REH, RN1, T1H, UUU, VEC, VVV, WSD) VALUES({int(nx)}, {int(ny)}, {base_date}, {int(base_time)}, {temp['PTY']}, {temp['REH']}, {temp['RN1']}, {temp['T1H']}, {temp['UUU']}, {temp['VEC']}, {temp['VVV']}, {temp['WSD']})"
+                sql = f"INSERT IGNORE INTO weather_data (x, y, Date, Time, PTY, REH, RN1, T1H, UUU, VEC, VVV, WSD) VALUES({int(nx)}, {int(ny)}, {base_date}, {int(base_time)}, {temp['PTY']}, {temp['REH']}, {temp['RN1']}, {temp['T1H']}, {temp['UUU']}, {temp['VEC']}, {temp['VVV']}, {temp['WSD']})"
                 cursor.execute(sql)
 
                 conn.commit()
@@ -54,28 +54,28 @@ def load_data(nx, ny, base_date, base_time):
         print("알맞은 값을 입력해 주세요. (x: 60~61, y: 120~124, 날짜: yyyymmdd, 시간: hhmm")
     return 1
 
-
-time_list = []
-now = datetime.now()
-today = datetime.today()
-today_date = today.strftime("%Y%m%d")
-today_time = now.hour
-print(today)
-for i in range(24):
-    str_time = '0'*(2-len(str(today_time))) + str(today_time) +'00'
-    time_list.append((today_date, str_time))
-    if today_time == 0:
-        yesterday = date.today() - timedelta(days=1)
-        today_date = yesterday.strftime('%Y%m%d')
-        today_time = 23
-    else:
-        today_time -= 1
-for D, T in time_list.__reversed__():
-    for i in range(60, 62):
-        for j in range(120, 125):
-            load_data(str(i), str(j), D, T)
-    print(f"({D}, {T}) data loaded")
-print("end of loading")
+if len(sys.argv) <= 1:
+    time_list = []
+    now = datetime.now()
+    today = datetime.today()
+    today_date = today.strftime("%Y%m%d")
+    today_time = now.hour
+    print(today)
+    for i in range(24):
+        str_time = '0'*(2-len(str(today_time))) + str(today_time) +'00'
+        time_list.append((today_date, str_time))
+        if today_time == 0:
+            yesterday = date.today() - timedelta(days=1)
+            today_date = yesterday.strftime('%Y%m%d')
+            today_time = 23
+        else:
+            today_time -= 1
+    for D, T in time_list.__reversed__():
+        for i in range(60, 62):
+            for j in range(120, 125):
+                load_data(str(i), str(j), D, T)
+        print(f"({D}, {T}) data saved")
+    print("end of saving")
 
 def batchload():
     now = datetime.now()
@@ -100,7 +100,7 @@ def batchload():
                 break
         if res == 1:
             break
-    print(f"{today_date} {base_time} loaded")
+    print(f"{today_date} {base_time} saved")
 
 if len(sys.argv) >= 2:
     if sys.argv[1] == 'param':
@@ -113,9 +113,10 @@ if len(sys.argv) >= 2:
         date_diff = int(today_date) - int(base_date)
         base_time = base_time[:-2] + '00'
         load_data(nx, ny, base_date, base_time)
+        print("data saved")
+if len(sys.argv) <= 1:
+    schedule.every(60).minutes.do(batchload)
 
-schedule.every(60).minutes.do(batchload)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

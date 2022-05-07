@@ -12,5 +12,6 @@ CREATE TABLE weather_data (
  VEC INT,
  VVV FLOAT,
  WSD FLOAT,
- PRIMARY KEY(seq)
+ PRIMARY KEY(seq),
+ UNIQUE INDEX(x, y, Date, Time)
 ) CHARSET=utf8;

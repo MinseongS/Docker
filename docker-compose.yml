@@ -48,8 +48,6 @@ services:
     networks:
       dev_net:
         ipv4_address: 172.28.1.1
-    command:
-      python ./api1.py start
 
   api2:
     depends_on:
