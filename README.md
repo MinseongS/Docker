@@ -43,7 +43,7 @@
    $ docker-compose run -rm api2
    ```
    ```
-   $ docker-compose up -rm api3
+   $ docker-compose run -rm api3
    ```
 
   
