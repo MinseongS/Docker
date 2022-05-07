@@ -1,0 +1,16 @@
+FROM python:3.8
+
+WORKDIR /app/
+
+
+RUN pip install pymysql cryptography
+
+ENV TZ Asia/Seoul
+
+COPY . .
+
+EXPOSE 8001
+
+CMD ["python", "./api2.py"]
+
+

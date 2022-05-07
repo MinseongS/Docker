@@ -1,0 +1,15 @@
+FROM python:3.8
+
+WORKDIR /app/
+
+RUN pip install pymysql requests cryptography schedule
+
+ENV TZ Asia/Seoul
+
+COPY . .
+
+EXPOSE 8000
+
+CMD python api1.py
+
+

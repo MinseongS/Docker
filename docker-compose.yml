@@ -1,0 +1,92 @@
+version: "3.7"
+
+volumes:
+  data: {}
+
+networks:
+  dev_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+
+services:
+  db:
+    image: mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: alstjd
+        MYSQL_DATABASE: weather
+    command: mysqld --character-set-server=utf8
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    networks:
+      dev_net:
+        ipv4_address: 172.28.1.2
+    volumes:
+      - data:/var/lib/mysql
+      - ./entrypoint.sql:/docker-entrypoint-initdb.d/entrypoint.sql
+    restart: always
+
+  api1:
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile1
+    volumes:
+      - .:/app/
+    environment:
+      - WEATHER_DB_NAME=weather
+      - WEATHER_DB_HOST=db
+      - WEATHER_DB_PORT=3306
+    ports:
+      - 8000
+    networks:
+      dev_net:
+        ipv4_address: 172.28.1.1
+    command:
+      python ./api1.py start
+
+  api2:
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile2
+    volumes:
+      - .:/app/
+    environment:
+      - WEATHER_DB_NAME=weather
+      - WEATHER_DB_HOST=db
+      - WEATHER_DB_PORT=3306
+    ports:
+      - 8001
+    networks:
+      dev_net:
+        ipv4_address: 172.28.1.3
+
+  api3:
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile3
+    volumes:
+      - .:/app/
+    environment:
+      - WEATHER_DB_NAME=weather
+      - WEATHER_DB_HOST=db
+      - WEATHER_DB_PORT=3306
+    ports:
+      - 8002
+    networks:
+      dev_net:
+        ipv4_address: 172.28.1.4
