@@ -37,7 +37,7 @@
    $ docker-compose run -rm api1
    ```
 
-4. API2 와 API3 를 각각 실행하고 원하는 parameter를 입력한다.
+4-1. 새로운 cmd 창을 통해 API2 와 API3 를 각각 실행하고 원하는 parameter를 입력한다.
 
    ```
    $ docker-compose run -rm api2
@@ -45,5 +45,5 @@
    ```
    $ docker-compose run -rm api3
    ```
-
+4-2. jupyter notebook파일 api2_graph, api3_graph 를 실행시켜 data를 시각화 하여 확인한다.
   
