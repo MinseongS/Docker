@@ -51,7 +51,7 @@ def load_data(nx, ny, base_date, base_time):
         else:
             print("현재부터 24시간 전까지 시간을 입력해 주세요.")
     else:
-        print("알맞은 값을 입력해 주세요. (x: 60~61, y: 120~124, 날짜: yyyymmdd, 시간: hhmm")
+        print("알맞은 값을 입력해 주세요. (x: 60~61, y: 120~124, 날짜: yyyymmdd, 시간: hhmm)")
     return 1
 
 if len(sys.argv) <= 1:
