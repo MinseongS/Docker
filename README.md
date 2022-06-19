@@ -1,6 +1,4 @@
 # DataEngineer
-신민성
-
 
 ## 구현 기능
 
